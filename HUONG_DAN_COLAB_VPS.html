@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hướng dẫn chạy AUTO VOTE #74412 (V5 Pure HTTP) — Colab &amp; VPS</title>
+<style>
+  body { font-family: 'Segoe UI', system-ui, sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; background: #0f1420; color: #e2e8f0; line-height: 1.7; }
+  h1 { color: #67e8f9; border-bottom: 2px solid #164e63; padding-bottom: 10px; }
+  h2 { color: #fbbf24; margin-top: 40px; }
+  h3 { color: #a5f3fc; }
+  code, pre { background: #1e293b; border-radius: 6px; font-size: 14px; }
+  code { padding: 2px 6px; }
+  pre { padding: 14px; overflow-x: auto; border: 1px solid #334155; }
+  .ok { background: #052e16; border-left: 4px solid #22c55e; padding: 10px 14px; border-radius: 4px; }
+  .warn { background: #422006; border-left: 4px solid #f59e0b; padding: 10px 14px; border-radius: 4px; }
+  .info { background: #083344; border-left: 4px solid #22d3ee; padding: 10px 14px; border-radius: 4px; }
+  details { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 12px 16px; margin: 12px 0; }
+  summary { cursor: pointer; font-weight: bold; color: #67e8f9; }
+  a { color: #67e8f9; }
+  table { border-collapse: collapse; width: 100%; margin: 10px 0; }
+  td, th { border: 1px solid #334155; padding: 8px 10px; text-align: left; }
+  th { background: #1e293b; color: #67e8f9; }
+</style>
+</head>
+<body>
+
+<h1>🚀 Hướng dẫn AUTO VOTE VNEXPRESS #74412 — V5 PURE HTTP</h1>
+<p>Poll: <b>"Quan điểm của bạn về việc thi lớp 10 chuyên theo khối?"</b> — <b>Đồng ý (249016)</b> / <b>Không đồng ý (249017)</b></p>
+
+<div class="ok">✅ <b>V5 không cần Chrome/Chromium, không cần captcha, không cần proxy.</b> Chỉ cần Python + thư viện <code>requests</code> (~5MB). Cài đặt mất ~30 giây.</div>
+
+<h2>⚡ Cách 1: Chạy tại máy Windows</h2>
+<ol>
+  <li>Double-click <b>CAI_DAT_TU_DONG.bat</b> → tự cài Python + requests → tự mở menu.</li>
+  <li>Lần sau chạy thẳng <b>CHAY_VOTE_74412.bat</b>.</li>
+</ol>
+
+<h2>☁️ Cách 2: Google Colab (IP Google — chạy song song nhiều tài khoản được)</h2>
+<ol>
+  <li>Mở <a href="https://colab.research.google.com" target="_blank">colab.research.google.com</a> → <b>New Notebook</b>.</li>
+  <li>Upload file <b>vote_74412.py</b> (📁 bên trái → Upload).</li>
+</ol>
+<details open><summary>Cell 1 — Cài đặt (10 giây)</summary>
+<pre>!pip install -q requests
+print("✅ Xong — không cần cài Chromium!")</pre>
+</details>
+<details open><summary>Cell 2 — Chạy buff</summary>
+<pre># Đổi dky -> kdy nếu muốn buff "Không đồng ý"
+!python vote_74412.py --tabs 5000 --parallel 12 --answer dky --rate 4.5</pre>
+</details>
+
+<h2>🖥️ Cách 3: VPS Linux Ubuntu/Debian (chạy 24/7)</h2>
+<h3>Bước 1 — Cài môi trường (1 lần)</h3>
+<pre>sudo apt update
+sudo apt install -y python3 python3-pip tmux
+pip3 install requests
+# Upload vote_74412.py qua SFTP/scp vào ~/</pre>
+
+<h3>Bước 2 — Chạy nền bằng tmux</h3>
+<pre>tmux new -s vote
+python3 vote_74412.py --tabs 50000 --parallel 12 --answer dky --rate 4.5
+# Ctrl+B rồi D để thoát (tool vẫn chạy ngầm)
+# Quay lại:  tmux attach -t vote</pre>
+
+<h3>Bước 3 — Tự chạy lại nếu dừng</h3>
+<pre>while true; do
+  python3 vote_74412.py --tabs 5000 --parallel 12 --answer dky --rate 4.5
+  sleep 60
+done</pre>
+
+<h2>📈 Tốc độ &amp; giới hạn (đã đo thực tế)</h2>
+<table>
+<tr><th>Chế độ</th><th>Tốc độ</th><th>Ghi chú</th></tr>
+<tr><td>1 IP, rate 4.5/s</td><td>~16.000 phiếu/giờ</td><td>Đếm thật ~98-100%</td></tr>
+<tr><td>Burst &gt;5/s</td><td>Trả OK nhưng <b>bị bỏ âm thầm</b></td><td>Không dùng!</td></tr>
+<tr><td>Nhiều IP (proxy/WARP)</td><td>~16.000 × N phiếu/giờ</td><td>Nhớ đặt rate mỗi IP ≤ 5/s</td></tr>
+</table>
+
+<h2>📖 Tham số</h2>
+<pre>python vote_74412.py --tabs 5000 --parallel 12 --answer dky --rate 4.5
+
+  --tabs        Tổng số phiếu muốn gửi            (mặc định 1500)
+  --parallel    Số luồng đồng thời                 (mặc định 16, nên 8-16)
+  --answer      dky = "Đồng ý" (249016) | kdy = "Không đồng ý" (249017) | ID số
+  --rate        Tốc độ tối đa mỗi IP (phiếu/s)     (mặc định 4.5, đừng >5)
+  --proxy-file  File proxy, mỗi dòng 1 proxy        (tuỳ chọn, tăng tốc theo IP)
+  --delay       Nghỉ thêm giữa các phiếu            (tuỳ chọn)</pre>
+
+<div class="info">🔬 <b>Cách hoạt động:</b> tool tái tạo đúng giao thức của VnExpress — lấy <code>_csrf</code> từ <code>/api/cf</code>, ký <code>md5</code> payload, POST <code>/vote/insertvote</code> với session mới mỗi phiếu. Server không xác thực captcha nên không cần trình duyệt.</div>
+<div class="warn">⚠️ Tăng <code>--rate</code> quá 5 sẽ <b>không tăng tốc độ thật</b> (server trả OK rồi bỏ phiếu). Muốn nhanh hơn: thêm proxy nhiều IP hoặc dùng WARP (menu [5]) — mỗi IP 4.5/s.</div>
+
+<p style="color:#94a3b8; margin-top:40px; border-top:1px solid #334155; padding-top:12px;">
+Author: <b>_LeMinhVoid_VnxD</b> • <a href="https://printpf.netlify.app/">printpf.netlify.app</a> • Cập nhật 10/11/2026
+</p>
+</body>
+</html>
